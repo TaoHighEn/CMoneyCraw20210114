@@ -41,19 +41,32 @@ namespace CMoneyCraw
                     List<Player> players = new List<Player>();
                     HtmlWeb web = new HtmlWeb();
                     HtmlDocument document = web.Load("https://www.basketball-reference.com/players/" + ch + "/");
-                    HtmlNodeCollection data = document.DocumentNode.SelectNodes($"//*[@id='players']/tbody/tr");
-                    if (data != null)
+                    HtmlNodeCollection name = document.DocumentNode.SelectNodes($"//*[@id='players']/tbody/tr");
+                    if (name != null)
                     {
-                        int row = data.Count();
+                        int row = name.Count();
                         for (int i = 1; i <= row; i++)
                         {
                             HtmlNodeCollection nodes = document.DocumentNode.SelectNodes($"//*[@id='players']/tbody/tr[{i}]/th/a");
                             if (nodes != null)
                             {
-                                string name = nodes[0].InnerText;
+                                Player player = new Player();
+                                player.Name = nodes[0].InnerText;
                                 string url = nodes[0].Attributes["href"].Value;
                                 // 3. Get Player Career Data
-                                Console.WriteLine(name + "    " + url);
+                                //Console.WriteLine(player.Name + "    " + url);
+                                HtmlWeb web_detail = new HtmlWeb();
+                                HtmlDocument doc_detail = web_detail.Load("https://www.basketball-reference.com/"+url);
+                                //紀錄div欄位
+                                HtmlNodeCollection data_detail = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div");
+                                //紀錄div欄位個數
+                                int count = data_detail.Count();
+                                //[1]標題忽略
+                                //HtmlNodeCollection data_1 = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[1]");
+                                HtmlNodeCollection data1 = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[2]");
+                                HtmlNodeCollection data2 = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[3]");
+                                HtmlNodeCollection data3 = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[4]");
+                                var json_data = JsonConvert.SerializeObject(data_detail[0].InnerHtml);
                             }
                         }
                     }
