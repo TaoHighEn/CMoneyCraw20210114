@@ -54,9 +54,9 @@ namespace CMoneyCraw
                                 player.Name = nodes[0].InnerText;
                                 string url = nodes[0].Attributes["href"].Value;
                                 // 3. Get Player Career Data
-                                //Console.WriteLine(player.Name + "    " + url);
+                                Console.WriteLine(player.Name + "    " + url);
                                 HtmlWeb web_detail = new HtmlWeb();
-                                HtmlDocument doc_detail = web_detail.Load("https://www.basketball-reference.com/"+url);
+                                HtmlDocument doc_detail = web_detail.Load("https://www.basketball-reference.com/" + url);
                                 //紀錄div欄位
                                 HtmlNodeCollection data_detail = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div");
                                 //紀錄div欄位個數
@@ -71,7 +71,10 @@ namespace CMoneyCraw
                         }
                     }
                     // 4. Output Char CSV.
+                    var ll = players;
+                    FileStream fileStream = new FileStream("./" + ch, System.IO.FileMode.Open, System.IO.FileAccess.Write);
                 }
+
                 Console.ReadLine();
             }
             catch (Exception e)
