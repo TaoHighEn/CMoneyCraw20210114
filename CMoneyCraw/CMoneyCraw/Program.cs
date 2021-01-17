@@ -47,34 +47,87 @@ namespace CMoneyCraw
                         int row = name.Count();
                         for (int i = 1; i <= row; i++)
                         {
-                            HtmlNodeCollection nodes = document.DocumentNode.SelectNodes($"//*[@id='players']/tbody/tr[{i}]/th/a");
+                            //部分有Strong,偷懶不判斷
+                            HtmlNodeCollection node1 = document.DocumentNode.SelectNodes($"//*[@id='players']/tbody/tr[{i}]/th/a");
+                            HtmlNodeCollection node2 = document.DocumentNode.SelectNodes($"//*[@id='players']/tbody/tr[{i}]/th/strong/a");
+                            HtmlNodeCollection nodes = node1==null?node2:node1;
+                            //*[@id="players"]/tbody/tr[10]/th/strong/a
+                            //表結構為Master-Detail
                             if (nodes != null)
                             {
                                 Player player = new Player();
+                                //取得Master
                                 player.Name = nodes[0].InnerText;
+                                //取得Detail
                                 string url = nodes[0].Attributes["href"].Value;
                                 // 3. Get Player Career Data
-                                Console.WriteLine(player.Name + "    " + url);
                                 HtmlWeb web_detail = new HtmlWeb();
                                 HtmlDocument doc_detail = web_detail.Load("https://www.basketball-reference.com/" + url);
-                                //紀錄div欄位
-                                HtmlNodeCollection data_detail = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div");
-                                //紀錄div欄位個數
-                                int count = data_detail.Count();
-                                //[1]標題忽略
-                                //HtmlNodeCollection data_1 = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[1]");
-                                HtmlNodeCollection data1 = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[2]");
-                                HtmlNodeCollection data2 = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[3]");
-                                HtmlNodeCollection data3 = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[4]");
-                                var json_data = JsonConvert.SerializeObject(data_detail[0].InnerHtml);
+
+                                //[2]G、PTS、TRB、AST、FG、FG3、FT、eFG、PER、WS
+                                //*[@id='info']/div[4]/div[{2}]/div[{1}]/p[2] {row} {col}
+                                for (int row_data = 2; row_data <= 4; row_data++)
+                                {
+                                    for (int col_data = 1; col_data <= 4; col_data++)
+                                    {
+                                        //var data = doc_detail.DocumentNode.ChildNodes.Where(x => x.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/h4")[0].InnerText == "G").SelectMany(x => x.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[col_data]/p[2]"));
+                                        if (doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/h4") != null)
+                                        {
+                                            switch (doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/h4")[0].InnerText)
+                                            {
+                                                case "G":
+                                                    player.G = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                case "PTS":
+                                                    player.PTS = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                case "TRB":
+                                                    player.TRB = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                case "AST":
+                                                    player.AST = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                case "FG%":
+                                                    player.FG = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                case "FG3%":
+                                                    player.FG3 = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                case "FT%":
+                                                    player.FT = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                case "eFG%":
+                                                    player.eFG = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                case "PER":
+                                                    player.PER = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                case "WS":
+                                                    player.WS = doc_detail.DocumentNode.SelectNodes($"//*[@id='info']/div[4]/div[{row_data}]/div[{col_data}]/p[2]")[0].InnerText;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }
+                                players.Add(player);
+                                //Testing
+                                Console.WriteLine(i + "///" + player.Name + " " + player.G + " " + player.PTS + " " + player.TRB + " " + player.AST + " " + player.FG + " " + player.FG3 + " " + player.FT + " " + player.eFG + " " + player.PER + " " + player.WS);
+                            }
+                            //驗證為空的節點
+                            else 
+                            {
+                                Console.WriteLine(i + "///" + nodes[0].InnerText+" "+ nodes[0].Attributes["href"].Value);
                             }
                         }
                     }
-                    // 4. Output Char CSV.
-                    var ll = players;
-                    FileStream fileStream = new FileStream("./" + ch, System.IO.FileMode.Open, System.IO.FileAccess.Write);
+                    //升冪排序
+                    players.Sort((x, y) => x.Name.CompareTo(y.Name));
+                    // 4. Output To Char CSV.
+                    FileStream fileStream = new FileStream("./" + ch.ToUpper(), System.IO.FileMode.Open, System.IO.FileAccess.Write);
+                    
                 }
-
                 Console.ReadLine();
             }
             catch (Exception e)
@@ -88,15 +141,15 @@ namespace CMoneyCraw
     public class Player
     {
         public string Name { get; set; }
-        public double G { get; set; }
-        public double PTS { get; set; }
-        public double TRB { get; set; }
-        public double AST { get; set; }
-        public double FG { get; set; }
-        public double FG3 { get; set; }
-        public double FT { get; set; }
-        public double eFG { get; set; }
-        public double PER { get; set; }
-        public double WS { get; set; }
+        public string G { get; set; }
+        public string PTS { get; set; }
+        public string TRB { get; set; }
+        public string AST { get; set; }
+        public string FG { get; set; }
+        public string FG3 { get; set; }
+        public string FT { get; set; }
+        public string eFG { get; set; }
+        public string PER { get; set; }
+        public string WS { get; set; }
     }
 }
