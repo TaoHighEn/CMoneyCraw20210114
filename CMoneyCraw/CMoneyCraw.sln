@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1231
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMoneyCraw", "CMoneyCraw\CMoneyCraw.csproj", "{7D0E98F0-0F46-43CC-A2F2-E7884756F173}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrawCostco", "CrawCostco\CrawCostco.csproj", "{D2CCFE53-3EF8-4B6B-9A26-465C0C8EB51C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7D0E98F0-0F46-43CC-A2F2-E7884756F173}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D0E98F0-0F46-43CC-A2F2-E7884756F173}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D0E98F0-0F46-43CC-A2F2-E7884756F173}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2CCFE53-3EF8-4B6B-9A26-465C0C8EB51C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2CCFE53-3EF8-4B6B-9A26-465C0C8EB51C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2CCFE53-3EF8-4B6B-9A26-465C0C8EB51C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2CCFE53-3EF8-4B6B-9A26-465C0C8EB51C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

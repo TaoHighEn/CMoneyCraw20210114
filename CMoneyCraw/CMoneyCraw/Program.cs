@@ -125,7 +125,7 @@ namespace CMoneyCraw
                     //升冪排序
                     players.Sort((x, y) => x.Name.CompareTo(y.Name));
                     // 4. Output To Char CSV.
-                    FileStream fileStream = new FileStream("./" + ch.ToUpper(), System.IO.FileMode.Open, System.IO.FileAccess.Write);
+                    //FileStream fileStream = new FileStream("./" + ch.ToUpper(), System.IO.FileMode.Open, System.IO.FileAccess.Write);
                     
                 }
                 Console.ReadLine();
